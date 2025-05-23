@@ -4,7 +4,7 @@ import { StoryblokComponent, useStoryblokApi, SbBlokData } from '@storyblok/reac
 import './App.css'
 import Pages from './Pages/Pages'
 import "./storyblok"
-
+import axios from 'axios';
 function App() {
   const [story, setStory] = useState<{ content: any } | null>(null);
   const storyblokApi = useStoryblokApi();
