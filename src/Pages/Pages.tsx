@@ -1,18 +1,43 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   SbBlokData,
   StoryblokComponent,
   storyblokEditable,
 } from "@storyblok/react";
 import axios from "axios";
+import XMLImporter from "./XMLImporter";
+import {
+  AppBar,
+  Box,
+  Button,
+  Container,
+  Grid,
+  IconButton,
+  Toolbar,
+  Typography,
+} from "@mui/material";
+import type { ImportedData } from "../Suport/Suport";
 
 interface PageProps {
   blok: SbBlokData & {
     body?: SbBlokData[];
   };
 }
+interface JsonData {
+  root: any;
+}
 
 const Pages = ({ blok }: PageProps) => {
+  const [jsonData, setJsonData] = useState<JsonData>();
+  const [importedData, setImportedData] = useState<ImportedData>();
+  useEffect(() => {
+    if (jsonData && jsonData.root) {
+      console.log("Imported json obj====", jsonData.root);
+      setImportedData(jsonData.root);
+    } else {
+      console.warn("jsonData or jsonData.root is undefined or null");
+    }
+  }, [jsonData]);
   console.log("pages blok =====", blok);
   const blockhHeader = {
     name: "new_test_3",
@@ -47,11 +72,11 @@ const Pages = ({ blok }: PageProps) => {
     is_nestable: true,
   };
   const storyheaders = {
-    name: "new_test_story_3",
-    slug: "new_test_story_3",
+    name: importedData?.story.name,
+    slug: importedData?.story.slug,
     parent_id: null,
     content: {
-      component: blockhHeader.name,
+      component: importedData?.story.content.body.component,
     },
     user_ids: [],
     space_role_ids: [],
@@ -91,15 +116,41 @@ const Pages = ({ blok }: PageProps) => {
   };
   return (
     <>
-      <main {...storyblokEditable(blok)}>
-        {blok &&
-          blok.body &&
-          blok.body.map((nestedBlok) => (
-            <StoryblokComponent blok={nestedBlok} key={nestedBlok._uid} />
-          ))}
-      </main>
-      <button onClick={createBlock}>Creat block</button>
-      <button onClick={createStory}>Creat story</button>
+      <Container maxWidth={false} sx={{ paddingY: 2 }}>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <AppBar position="static">
+              <Toolbar>
+                <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                  Storyblok Main Page
+                </Typography>
+                <Button color="inherit" onClick={createBlock}>
+                  Create Block
+                </Button>
+                <Button color="inherit" onClick={createStory}>
+                  Create Story
+                </Button>
+                <Button color="inherit">
+                  <XMLImporter jsonData={jsonData} setJsonData={setJsonData} />
+                </Button>
+              </Toolbar>
+            </AppBar>
+          </Grid>
+        </Grid>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <main {...storyblokEditable(blok)}>
+              <Grid container spacing={2}>
+                {blok?.body?.map((nestedBlok) => (
+                  <Grid item xs={4} md={6} lg={4} key={nestedBlok._uid}>
+                    <StoryblokComponent blok={nestedBlok} />
+                  </Grid>
+                ))}
+              </Grid>
+            </main>
+          </Grid>
+        </Grid>
+      </Container>
     </>
   );
 };
