@@ -16,6 +16,7 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
+import MenuIcon from '@mui/icons-material/Menu';
 import type { ImportedData } from "../Suport/Suport";
 
 interface PageProps {
@@ -116,8 +117,34 @@ const Pages = ({ blok }: PageProps) => {
   };
   return (
     <>
-      <Container maxWidth={false} sx={{ paddingY: 2 }}>
-        <Grid container spacing={2}>
+    <Box sx={{ flexGrow: 1 }}>
+      <AppBar position="static">
+        <Toolbar>
+          <IconButton
+            size="large"
+            edge="start"
+            color="inherit"
+            aria-label="menu"
+            sx={{ mr: 2 }}
+          >
+            <MenuIcon />
+          </IconButton>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            News
+          </Typography>
+          <Button color="inherit">Login</Button>
+        </Toolbar>
+      </AppBar>
+    </Box>
+    </>
+  );
+};
+
+export default Pages;
+
+
+//  <Container maxWidth={false} sx={{ paddingY: 2 }}>
+        {/* <Grid container spacing={2}>
           <Grid item xs={12}>
             <AppBar position="static">
               <Toolbar>
@@ -136,8 +163,8 @@ const Pages = ({ blok }: PageProps) => {
               </Toolbar>
             </AppBar>
           </Grid>
-        </Grid>
-        <Grid container spacing={2}>
+        </Grid> */}
+        {/* <Grid container spacing={2}>
           <Grid item xs={12}>
             <main {...storyblokEditable(blok)}>
               <Grid container spacing={2}>
@@ -149,10 +176,5 @@ const Pages = ({ blok }: PageProps) => {
               </Grid>
             </main>
           </Grid>
-        </Grid>
-      </Container>
-    </>
-  );
-};
-
-export default Pages;
+        </Grid> */}
+      {/* </Container> */}
